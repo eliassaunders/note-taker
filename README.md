@@ -6,4 +6,4 @@
 
 https://note-taker-es.herokuapp.com/
 
-[!screenshot](./Capture.png/)
+[!screenshot](./Capture.PNG)
