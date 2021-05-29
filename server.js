@@ -23,48 +23,50 @@ app.get('/', (req, res) => {
 
 
 app.get('/notes', (req, res) => {
-   res.sendFile(path.join(__dirname, './notes.html'));
+    res.sendFile(path.join(__dirname, './public/notes.html'));
 });
 
 app.get('/api/notes', (req, res) => {
-    fs.readFile('./db/db.json', 'utf-8', (err, data) => {
+    fs.readFile('db/db.json', 'utf-8', (err, data) => {
         if (err) {
             req.status(400)
             return;
-        } 
+        }
         res.send(data);
     })
 })
 
 app.post('/api/notes', (req, res) => {
-    
+
     const newNote = {
         ...req.body,
         id: uuidv4()
     }
 
-    const info = [];
+    let info = [];
 
-    fs.readFile('./db/db.json', 'utf-8', (err, data) => {
-        if (err) {
-            req.status(400)
-            return;
-        }
-        info.push(data);
-    })
-
-    info.push(newNote);
-
-    const stringed = JSON.stringify(info);
-
-    fs.writeFile('./db/db.json', stringed, err => {
+    fs.readFile('db/db.json', 'utf-8', (err, data) => {
         if (err) {
             res.status(400)
+            console.log(err);
             return;
-        } else {
-            res.json({message: "success"});
         }
+        console.log(data);
+        info = JSON.parse(data);
+        info.push(newNote);
+        const stringed = JSON.stringify(info);
+        fs.writeFile('db/db.json', stringed, err => {
+            if (err) {
+                res.status(400)
+                return;
+            } else {
+                res.json({ message: "success" });
+            }
+        })
     })
+
+
+
 });
 
 
